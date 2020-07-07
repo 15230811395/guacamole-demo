@@ -1,0 +1,10 @@
+server:
+  port: 7788
+
+spring:
+  application:
+    name: guacamole-demo
+
+host:
+  port: 4822
+  name: localhost

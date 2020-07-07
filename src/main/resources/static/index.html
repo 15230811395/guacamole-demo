@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+        <link rel="stylesheet" type="text/css" href="guacamole.css"/>
+        <title>Guacamole (EXAMPLE)</title>
+    </head>
+
+    <body>
+
+        <!-- Display -->
+        <div id="display"></div>
+
+        <!-- Guacamole JavaScript API -->
+        <script type="text/javascript"
+            src="all.min.js"></script>
+
+        <!-- Init -->
+        <script type="text/javascript"> /* <![CDATA[ */
+
+            // Get display div from document
+            var display = document.getElementById("display");
+
+            // Instantiate client, using an HTTP tunnel for communications.
+            var guac = new Guacamole.Client(
+                new Guacamole.HTTPTunnel("tunnel")
+            );
+
+            // Add client to display div
+            display.appendChild(guac.getDisplay().getElement());
+            
+            // Error handler
+            guac.onerror = function(error) {
+                //console.log(error);
+                alert(error.message);
+            };
+
+            // Connect
+            guac.connect("hostname=172.16.0.75&protocol=ssh&port=22&username=root&password=*963.*963.");
+
+            // Disconnect on close
+            window.onunload = function() {
+                guac.disconnect();
+            }
+
+            // Mouse
+            var mouse = new Guacamole.Mouse(guac.getDisplay().getElement());
+
+            mouse.onmousedown = 
+            mouse.onmouseup   =
+            mouse.onmousemove = function(mouseState) {
+                guac.sendMouseState(mouseState);
+            };
+
+            // Keyboard
+            var keyboard = new Guacamole.Keyboard(document);
+
+            keyboard.onkeydown = function (keysym) {
+                guac.sendKeyEvent(1, keysym);
+            };
+
+            keyboard.onkeyup = function (keysym) {
+                guac.sendKeyEvent(0, keysym);
+            };
+
+        /* ]]> */ </script>
+
+    </body>
+
+</html>
